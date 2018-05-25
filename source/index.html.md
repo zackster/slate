@@ -9,7 +9,6 @@ language_tabs: # must be one of https://git.io/vQNgJ
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
 
 includes:
   - errors
@@ -19,26 +18,39 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the WorkReduce API! You can use our API to access WorkReduce API endpoints, which can get information on various tasks and orders on our platform.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
 
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+<aside class="notice">
+The WorkReduce API is versioned by release date.  If you are just getting started, we recommend using the most recently released version of the API.  If you are using one of our libraries for Python, Ruby, or Node.js, this will be handled for you automatically.<br /><br />
+
+If you are rolling your own connection via curl, you will need to ensure the URL endpoints contain the API release version you are using.<br /><br />
+
+For example, requests to "https://api.workreduce.com/v1/orders" would go to version 1 of the API.
+</aside>
+
+API Version | Release date
+--------- | -------
+v1 | 05-25-2018
+
+
+
 
 # Authentication
 
 > To authorize, use this code:
 
 ```ruby
-require 'kittn'
+require 'workreduce'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
+api = WorkReduce::APIClient.authorize!('meowmeowmeow')
 ```
 
 ```python
-import kittn
+import workreduce
 
-api = kittn.authorize('meowmeowmeow')
+api = workreduce.authorize('meowmeowmeow')
 ```
 
 ```shell
@@ -48,16 +60,16 @@ curl "api_endpoint_here"
 ```
 
 ```javascript
-const kittn = require('kittn');
+const workreduce = require('workreduce');
 
-let api = kittn.authorize('meowmeowmeow');
+let api = workreduce.authorize('meowmeowmeow');
 ```
 
 > Make sure to replace `meowmeowmeow` with your API key.
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+WorkReduce uses API keys to allow access to the API. You can register a new WorkReduce API key at our [developer portal](#).
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
+WorkReduce expects for the API key to be included in all API requests to the server in a header that looks like the following:
 
 `Authorization: meowmeowmeow`
 
@@ -65,34 +77,34 @@ Kittn expects for the API key to be included in all API requests to the server i
 You must replace <code>meowmeowmeow</code> with your personal API key.
 </aside>
 
-# Kittens
+# Orders
 
-## Get All Kittens
+## Get All Open Orders
 
 ```ruby
-require 'kittn'
+require 'workreduce'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
+api = WorkReduce::APIClient.authorize!('meowmeowmeow')
+api.orders.get
 ```
 
 ```python
-import kittn
+import workreduce
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
+api = workreduce.authorize('meowmeowmeow')
+api.orders.get()
 ```
 
 ```shell
-curl "http://example.com/api/kittens"
+curl "https://api.workreduce.com/v1/orders"
   -H "Authorization: meowmeowmeow"
 ```
 
 ```javascript
-const kittn = require('kittn');
+const workreduce = require('workreduce');
 
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+let api = workreduce.authorize('meowmeowmeow');
+let orders = api.orders.get();
 ```
 
 > The above command returns JSON structured like this:
@@ -100,140 +112,325 @@ let kittens = api.kittens.get();
 ```json
 [
   {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
+    "id": 00007847,
+    "name": "QA Screenshot of Ad Creative - BigCo",
+    "status": "Complete",
+    "due_date": "2018-05-03T18:30:00Z",
+    "requester_email": "george@big-agency.com",
+    "team": "MENA launch ads",
+    "description": "Please look at the tag code...",
+    "attachments": [
+      "https://s3.workreduce.com/bigagency/00007847_0.txt",
+      "https://s3.workreduce.com/bigagency/00007847_1.png"
+    ],
+    "task_type": "qa_screenshot"
   },
   {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+    "id": 00007848,
+    "name": "Second QA Screenshot of Ad Creative - BigCo",
+    "status": "Pending",
+    "due_date": "2018-05-14T18:30:00Z",
+    "requester_email": "george@big-agency.com",
+    "team": "MENA launch ads",
+    "description": "Another task for you.  Please perform the...",
+    "attachments": [
+      "https://s3.workreduce.com/bigagency/00007848_0.txt",
+    ],
+    "task_type": "qa_screenshot"
   }
 ]
 ```
 
-This endpoint retrieves all kittens.
+This endpoint retrieves all open orders for your account.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`GET https://api.workreduce.com/v1/orders`
 
-### Query Parameters
+### URL Parameters
 
 Parameter | Default | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+whole_organization | false | If set to true, the result will include orders created by anyone in your organization.
+team | false | If set to true, the result will include orders created by anyone in your team.
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Remember — a happy WorkReduce API request is an authenticated request!
 </aside>
 
-## Get a Specific Kitten
+
+## New Order
 
 ```ruby
-require 'kittn'
+require 'workreduce'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
+api = WorkReduce::APIClient.authorize!('meowmeowmeow')
+api.orders.create(
+  :name => 'This is the name for the order',
+  :description => 'This is some longer description for the order',
+  :due_date => '2018-05-14T18:30:00Z',
+  :attachments => [
+    'C:\Users\Public\Desktop\screenshot.jpg'
+  ],
+  :task_type => "qa_screenshot"
+)
 ```
 
 ```python
-import kittn
+import workreduce
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
+api = workreduce.authorize('meowmeowmeow')
+api.orders.create(
+  name='This is the name for the order',
+  description='This is some longer description for the order',
+  due_date='2018-05-14T18:30:00Z',
+  attachments=['C:\Users\Public\Desktop\screenshot.jpg'],
+  task_type='qa_screenshot'
+)
 ```
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
+curl "https://api.workreduce.com/v1/orders" \
+  -H "Authorization: meowmeowmeow" \
+  -d name="This is the name for the order" \
+  -d description="This is some longer description for the order" \
+  -d due_date="2018-05-14T18:30:00Z" \
+  -d task_type="qa_screenshot" \
+  -F "attachments[]=@screenshot.jpg" -F "attachments[]=@screenshot2.gif"
 ```
 
 ```javascript
-const kittn = require('kittn');
+const workreduce = require('workreduce');
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+let api = workreduce.authorize('meowmeowmeow');
+let order = api.orders.create({
+  name: 'This is the name for the order',
+  description: 'This is some longer description for the order',
+  due_date: '2018-05-14T18:30:00Z',
+  task_type: 'qa_screenshot',
+  attachments: ['C:\Users\Public\Desktop\screenshot.jpg']
+});
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "id": 00007848,
+  "created" : "success"
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+This endpoint creates a new Order.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`POST https://api.workreduce.com/v1/orders`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to retrieve
+name | The name for the Order
+due_date | The due date of the Order, formatted according to ISO 8601
+description | A description containing instructions for executing the Order
+attachments | A list of files to attach to the Order
+task_type | The task type of the order.  Get this from the list of codes of [task types available to your account](#list-all-task-types)
 
-## Delete a Specific Kitten
+
+## Update An Existing Order
 
 ```ruby
-require 'kittn'
+require 'workreduce'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
+api = WorkReduce::APIClient.authorize!('meowmeowmeow')
+api.orders.update(
+  :id => '00007848',
+  :name => 'This is the updated name for the order',
+  :description => 'This is the updated desc for the order',
+  :due_date => '2018-05-14T18:30:00Z',
+  :attachments => [
+    'C:\Users\Public\Desktop\new_attachment.jpg'
+  ],
+  :task_type => "qa_screenshot"
+)
 ```
 
 ```python
-import kittn
+import workreduce
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
+api = workreduce.authorize('meowmeowmeow')
+api.orders.update(
+  id='00007848',
+  name='This is the updated name for the order',
+  description='This is the updated desc for the order',
+  due_date='2018-05-14T18:30:00Z',
+  attachments=['C:\Users\Public\Desktop\new_attachment.jpg'],
+  task_type="qa_screenshot"
+)
 ```
 
 ```shell
-curl "http://example.com/api/kittens/2"
+curl "https://api.workreduce.com/v1/orders" \
+  -H "Authorization: meowmeowmeow" \
+  -d id="00007848" \
+  -d name="This is the updated name for the order" \
+  -d description="This is the updated desc for the order" \
+  -d due_date="2018-05-14T18:30:00Z" \
+  -d task_type="qa_screenshot" \
+  -F "attachments[]=@new_screenshot.jpg" -F "attachments[]=@new_screenshot2.gif"
+```
+
+```javascript
+const workreduce = require('workreduce');
+
+let api = workreduce.authorize('meowmeowmeow');
+let order = api.orders.update({
+  id: '00007848',
+  name: 'This is the updated name for the order',
+  description: 'This is the updated desc for the order',
+  due_date: '2018-05-14T18:30:00Z',
+  task_type: 'qa_screenshot',
+  attachments: ['C:\Users\Public\Desktop\new_screenshot.jpg']
+});
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": 00007848,
+  "updated" : "success"
+}
+```
+
+### HTTP Request
+
+`PUT https://api.workreduce.com/v1/orders/<ID>`
+
+### URL Parameters
+
+Parameter | Required | Description
+--------- | ----------- | -----------
+id | Required | The ID of the Order to update
+name | Optional | The new name of the Order
+description | Optional| The new description of the Order
+due_date | Optional| The new due date for the Order.  ISO 8601.
+attachments | Optional | Any new attachments for the Order.  Does not delete old attachments.
+task_type | Optional | The new task type of the order.  Get this from the list of codes of [task types available to your account](#list-all-task-types)
+
+### Notes
+
+You must pass in at least one optional parameter or the API will return a [400 Error](#errors).
+
+## Cancel An Existing Order
+
+```ruby
+require 'workreduce'
+
+api = WorkReduce::APIClient.authorize!('meowmeowmeow')
+api.orders.cancel('00007848')
+```
+
+```python
+import workreduce
+
+api = workreduce.authorize('meowmeowmeow')
+api.orders.cancel('00007848')
+```
+
+```shell
+curl "https://api.workreduce.com/v1/orders/00007848"
   -X DELETE
   -H "Authorization: meowmeowmeow"
 ```
 
 ```javascript
-const kittn = require('kittn');
+const workreduce = require('workreduce');
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
+let api = workreduce.authorize('meowmeowmeow');
+let order = api.orders.cancel('00007848');
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "deleted" : ":("
+  "id": 00007848,
+  "deleted" : "success"
 }
 ```
 
-This endpoint deletes a specific kitten.
+This endpoint deletes a specific Order.
 
 ### HTTP Request
 
-`DELETE http://example.com/kittens/<ID>`
+`DELETE https://api.workreduce.com/v1/orders/<ID>`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to delete
+ID | The ID of the Order to delete
 
+
+
+
+
+# Tasks
+
+## List All Task Types
+
+```ruby
+require 'workreduce'
+
+api = WorkReduce::APIClient.authorize!('meowmeowmeow')
+api.tasks.get
+```
+
+```python
+import workreduce
+
+api = workreduce.authorize('meowmeowmeow')
+api.tasks.get()
+```
+
+```shell
+curl "https://api.workreduce.com/v1/tasks"
+  -H "Authorization: meowmeowmeow"
+```
+
+```javascript
+const workreduce = require('workreduce');
+
+let api = workreduce.authorize('meowmeowmeow');
+let tasks = api.tasks.get();
+```
+
+> The above command returns JSON structured like this:
+
+```json
+[
+  {
+    "code": "qa_screenshot",
+    "description": "QA Screenshot of Ad Creative",
+  },
+  {
+    "code": "recon",
+    "description": "Reconciliation of quarterly ad spend",
+  }
+]
+```
+
+This endpoint retrieves all task types your account is authorized to request.
+
+### HTTP Request
+
+`GET https://api.workreduce.com/v1/tasks`
+
+### URL Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+whole_organization | false | If set to true, the result will include task types available to anyone in your organization.
+team | false | If set to true, the result will include task types available to anyone in your team.
