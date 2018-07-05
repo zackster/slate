@@ -7,9 +7,6 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - python
   - javascript
 
-toc_footers:
-  - Contact your Client Director with any questions</a>
-
 includes:
   - errors
 
