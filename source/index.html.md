@@ -119,7 +119,7 @@ let orders = api.orders.get('00007847');
   "due_date": "2018-05-03T18:30:00Z",
   "requester_email": "george@big-agency.com",
   "team": "MENA launch ads",
-  "order_details": {
+  "work_request": {
     "notes": [
       "Please look at the tag code..."
     ],
@@ -129,7 +129,7 @@ let orders = api.orders.get('00007847');
       "https://s3.workreduce.com/bigagency/notes.txt"
     ]
   },
-  "filled_order": [
+  "work_result": [
     {
       "notes": [
         "Here is a comment...."
@@ -155,7 +155,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
 </aside>
 
 
-## Get All Open Orders
+## Get All Orders
 
 ```ruby
 require 'workreduce'
@@ -194,7 +194,7 @@ let orders = api.orders.get();
     "due_date": "2018-05-03T18:30:00Z",
     "requester_email": "george@big-agency.com",
     "team": "MENA launch ads",
-    "order_details": {
+    "work_request": {
       "notes": [
         "Please look at the tag code..."
       ],
@@ -204,7 +204,7 @@ let orders = api.orders.get();
         "https://s3.workreduce.com/bigagency/notes.txt"
       ]
     },
-    "filled_order": [
+    "work_result": [
       {
         "notes": [
           "Here is a comment...."
@@ -223,7 +223,7 @@ let orders = api.orders.get();
     "due_date": "2018-05-04T18:30:00Z",
     "requester_email": "george@big-agency.com",
     "team": "MENA launch ads",
-    "order_details": {
+    "work_request": {
       "notes": [
         "Please look at the tag code again..."
       ],
@@ -233,7 +233,7 @@ let orders = api.orders.get();
         "https://s3.workreduce.com/bigagency/notes2.txt"
       ]
     },
-    "filled_order": [
+    "work_result": [
       {
         "notes": [
           "Here is another comment...."
