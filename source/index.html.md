@@ -79,6 +79,21 @@ WorkReduce expects for the API key to be included in all API requests to the ser
 You must replace <code>meowmeowmeow</code> with your organization's API key.
 </aside>
 
+
+# Task Lifecycle
+
+Orders for Tasks go through the following lifecycle:
+
+
+![Draft -> Activated -> Accepted -> In Progress -> Submitted -> In QA -> QA Complete -> Completed -> Delivered -> Approved](images/workreduce-request-lifecycle-LR.svg)
+
+[See a full-size image of the diagram](images/workreduce-request-lifecycle.svg)
+
+
+<!-- See lifecycle.txt for the Mermaid code to generate the SVG via https://mermaidjs.github.io/mermaid-live-editor/ -->
+
+For a full explanation of each stage, [see this table](#order-status-values).
+
 # Orders
 
 ## Get Individual Order
@@ -255,9 +270,37 @@ This endpoint retrieves all open orders for your account.
 `GET https://api.workreduce.com/v2/orders`
 
 
-<aside class="success">
-Remember — a happy WorkReduce API request is an authenticated request!
-</aside>
+### Pagination
+
+The WorkReduce Get All Orders API route utilizes cursor-based pagination via the `starting_after` and `ending_before` parameters. Both parameters take an existing Order Number (see below) and return Orders in reverse chronological order. The `ending_before` parameter returns Orders listed before the named Order. The `starting_after` parameter returns Orders listed after the named Order. If both parameters are provided, only ending_before is used.
+
+
+### URL Parameters
+
+Parameter | Description | Additional Info
+--------- | ----------- | -----------
+status | Filter the result for Orders that match the status.  [See table with acceptable values for `status`](#order-status-values). | Optional.  Default behavior is not to filter.
+limit | A limit on the number of Orders to be returned, between 1 and 100 | Optional. Default is 10.
+starting_after | A cursor for use in pagination. starting_after is a WorkReduce Order Number that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include starting_after=obj_foo in order to fetch the next page of the list. | Optional
+ending_before | A cursor for use in pagination. ending_before is a WorkReduce Order Number that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_bar, your subsequent call can include ending_before=obj_bar in order to fetch the previous page of the list. | Optional
+
+
+### Order Status values
+
+Status value | Description
+------------ | ------------
+`Draft` | Task only submitted: this usually means something is missing such as attachments or sufficient detail
+`Activated` | Task has been submitted by the client and ready to work on
+`Accepted` | Task has been accepted by worker
+`In Progress` | Task is in progress
+`Submitted` | Task has been submitted by worker, ready for review
+`In QA` | Task is in QA
+`QA Complete` | QA has been completed
+`Delivered` | Task is complete, ready to be approved by client
+`Approved` | Task is complete and client has approved the task
+`Canceled` | Task canceled by WorkReduce
+`Client Canceled` | Task canceled by the client
+
 
 
 ## New Order

@@ -1,0 +1,10 @@
+graph TD;
+     A(Draft)-->B(Activated);
+     B(Activated)-->C(Accepted);
+     C(Accepted)--> D(In Progress);
+     D(In Progress)-->E(Submitted);
+     E(Submitted)-->F(In QA);
+     F(In QA)-->G(QA Complete);
+     G(QA Complete)-->H(Completed);
+     H(Completed)-->I(Delivered);
+     I(Delivered)-->J(Approved)
