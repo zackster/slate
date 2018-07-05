@@ -231,6 +231,9 @@
             <a href="#orders" class="toc-h1 toc-link" data-title="orders">Orders</a>
               <ul class="toc-list-h2">
                   <li>
+                    <a href="#get-individual-order" class="toc-h2 toc-link" data-title="get-individual-order">Get Individual Order</a>
+                  </li>
+                  <li>
                     <a href="#get-all-open-orders" class="toc-h2 toc-link" data-title="get-all-open-orders">Get All Open Orders</a>
                   </li>
                   <li>
@@ -266,25 +269,32 @@
         <h1 id='introduction'>Introduction</h1>
 <p>Welcome to the WorkReduce API! You can use our API to access WorkReduce API endpoints, which can get information on various tasks and orders on our platform.</p>
 
-<p>We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<p>We have language bindings in Shell, Ruby, Python, and JavaScript!  As you scroll down the page, you will be able to view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
 
 <aside class="notice">
 The WorkReduce API is versioned by release date.  If you are just getting started, we recommend using the most recently released version of the API.  If you are using one of our libraries for Python, Ruby, or Node.js, this will be handled for you automatically.<br /><br />
 
 If you are rolling your own connection via curl, you will need to ensure the URL endpoints contain the API release version you are using.<br /><br />
 
-For example, requests to "https://api.workreduce.com/v1/orders" would go to version 1 of the API.
+For example, requests to "https://api.workreduce.com/v2/orders" would go to version 2 of the API.
 </aside>
 
 <table><thead>
 <tr>
 <th>API Version</th>
 <th>Release date</th>
+<th>Current Version?</th>
 </tr>
 </thead><tbody>
 <tr>
+<td>v2</td>
+<td>07-05-2018</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
 <td>v1</td>
 <td>05-25-2018</td>
+<td>No</td>
 </tr>
 </tbody></table>
 <h1 id='authentication'>Authentication</h1>
@@ -308,16 +318,71 @@ curl <span class="s2">"api_endpoint_here"</span>
 <p>Make sure to replace <code>meowmeowmeow</code> with your API key.</p>
 </blockquote>
 
-<p>WorkReduce uses API keys to allow access to the API. You can register a new WorkReduce API key at our <a href="#">developer portal</a>.</p>
+<p>WorkReduce uses API keys to allow access to the API. You can request access to the WorkReduce API by having a conversation with your Client Director, who will set you up with an API key.</p>
 
 <p>WorkReduce expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
 
 <p><code>Authorization: meowmeowmeow</code></p>
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>meowmeowmeow</code> with your organization's API key.
 </aside>
-<h1 id='orders'>Orders</h1><h2 id='get-all-open-orders'>Get All Open Orders</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'workreduce'</span>
+<h1 id='orders'>Orders</h1><h2 id='get-individual-order'>Get Individual Order</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'workreduce'</span>
+
+<span class="n">api</span> <span class="o">=</span> <span class="no">WorkReduce</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
+<span class="n">api</span><span class="p">.</span><span class="nf">orders</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s1">'00007847'</span><span class="p">)</span>
+</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">workreduce</span>
+
+<span class="n">api</span> <span class="o">=</span> <span class="n">workreduce</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">orders</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'00007847'</span><span class="p">)</span>
+</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.workreduce.com/v2/order/00007847"</span>
+  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">workreduce</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'workreduce'</span><span class="p">);</span>
+
+<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">workreduce</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">orders</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">orders</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'00007847'</span><span class="p">);</span>
+</code></pre>
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"order_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00007847"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QA Screenshot of Ad Creative - BigCo"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Complete"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"due_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"requester_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"george@big-agency.com"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MENA launch ads"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"order_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"Please look at the tag code..."</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"https://s3.workreduce.com/bigagency/tag_screenshot.jpg"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"https://s3.workreduce.com/bigagency/notes.txt"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"filled_order"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"Here is a comment...."</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://s3.workreduce.com/bigagency/completed_screenshot.jpg"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"task_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qa_screenshot"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>This endpoint retrieves all details for a specific open order for your account.</p>
+<h3 id='http-request'>HTTP Request</h3>
+<p><code>GET https://api.workreduce.com/v2/order/&lt;OrderNumber&gt;</code></p>
+
+<aside class="success">
+Remember — a happy WorkReduce API request is an authenticated request!
+</aside>
+<h2 id='get-all-open-orders'>Get All Open Orders</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'workreduce'</span>
 
 <span class="n">api</span> <span class="o">=</span> <span class="no">WorkReduce</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
 <span class="n">api</span><span class="p">.</span><span class="nf">orders</span><span class="p">.</span><span class="nf">get</span>
@@ -325,7 +390,7 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 
 <span class="n">api</span> <span class="o">=</span> <span class="n">workreduce</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
 <span class="n">api</span><span class="o">.</span><span class="n">orders</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.workreduce.com/v1/orders"</span>
+</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.workreduce.com/v2/orders"</span>
   -H <span class="s2">"Authorization: meowmeowmeow"</span>
 </code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">workreduce</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'workreduce'</span><span class="p">);</span>
 
@@ -337,56 +402,68 @@ You must replace <code>meowmeowmeow</code> with your personal API key.
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">00007847</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"order_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00007847"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QA Screenshot of Ad Creative - BigCo"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Complete"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"due_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"requester_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"george@big-agency.com"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MENA launch ads"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Please look at the tag code..."</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="s2">"https://s3.workreduce.com/bigagency/00007847_0.txt"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"https://s3.workreduce.com/bigagency/00007847_1.png"</span><span class="w">
+    </span><span class="s2">"order_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"Please look at the tag code..."</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://s3.workreduce.com/bigagency/tag_screenshot.jpg"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://s3.workreduce.com/bigagency/notes.txt"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"filled_order"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"Here is a comment...."</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"https://s3.workreduce.com/bigagency/completed_screenshot.jpg"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
     </span><span class="s2">"task_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qa_screenshot"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">00007848</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Second QA Screenshot of Ad Creative - BigCo"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pending"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"due_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-14T18:30:00Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"order_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00007848"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QA Screenshot of Ad Creative - BigCo - Another"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Approved"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"due_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-04T18:30:00Z"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"requester_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"george@big-agency.com"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MENA launch ads"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Another task for you.  Please perform the..."</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="s2">"https://s3.workreduce.com/bigagency/00007848_0.txt"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"order_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"Please look at the tag code again..."</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://s3.workreduce.com/bigagency/tag_screenshot2.jpg"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://s3.workreduce.com/bigagency/spreadsheet_details2.xlsx"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://s3.workreduce.com/bigagency/notes2.txt"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"filled_order"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"Here is another comment...."</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"https://s3.workreduce.com/bigagency/completed_screenshot2.jpg"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
     </span><span class="s2">"task_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qa_screenshot"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
 <p>This endpoint retrieves all open orders for your account.</p>
-<h3 id='http-request'>HTTP Request</h3>
-<p><code>GET https://api.workreduce.com/v1/orders</code></p>
-<h3 id='url-parameters'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>whole_organization</td>
-<td>false</td>
-<td>If set to true, the result will include orders created by anyone in your organization.</td>
-</tr>
-<tr>
-<td>team</td>
-<td>false</td>
-<td>If set to true, the result will include orders created by anyone in your team.</td>
-</tr>
-</tbody></table>
+<h3 id='http-request-2'>HTTP Request</h3>
+<p><code>GET https://api.workreduce.com/v2/orders</code></p>
 
 <aside class="success">
 Remember — a happy WorkReduce API request is an authenticated request!
@@ -401,7 +478,9 @@ Remember — a happy WorkReduce API request is an authenticated request!
   <span class="ss">:attachments</span> <span class="o">=&gt;</span> <span class="p">[</span>
     <span class="s1">'C:\Users\Public\Desktop\screenshot.jpg'</span>
   <span class="p">],</span>
-  <span class="ss">:task_type</span> <span class="o">=&gt;</span> <span class="s2">"qa_screenshot"</span>
+  <span class="ss">:task_type</span> <span class="o">=&gt;</span> <span class="s2">"qa_screenshot"</span><span class="p">,</span>
+  <span class="ss">:team</span> <span class="o">=&gt;</span> <span class="s2">"EMEA Mobile Team"</span><span class="p">,</span>
+  <span class="ss">:requester_email</span> <span class="o">=&gt;</span> <span class="s2">"emea@ads-agency.com"</span>
 <span class="p">)</span>
 </code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">workreduce</span>
 
@@ -411,14 +490,18 @@ Remember — a happy WorkReduce API request is an authenticated request!
   <span class="n">description</span><span class="o">=</span><span class="s">'This is some longer description for the order'</span><span class="p">,</span>
   <span class="n">due_date</span><span class="o">=</span><span class="s">'2018-05-14T18:30:00Z'</span><span class="p">,</span>
   <span class="n">attachments</span><span class="o">=</span><span class="p">[</span><span class="s">'C:</span><span class="err">\</span><span class="s">Users</span><span class="err">\</span><span class="s">Public</span><span class="err">\</span><span class="s">Desktop</span><span class="err">\</span><span class="s">screenshot.jpg'</span><span class="p">],</span>
-  <span class="n">task_type</span><span class="o">=</span><span class="s">'qa_screenshot'</span>
+  <span class="n">task_type</span><span class="o">=</span><span class="s">'qa_screenshot'</span><span class="p">,</span>
+  <span class="n">team</span><span class="o">=</span><span class="s">'EMEA Mobile Team'</span><span class="p">,</span>
+  <span class="n">requester_email</span><span class="o">=</span><span class="s">'emea@ads-agency.com'</span>
 <span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.workreduce.com/v1/orders"</span> <span class="se">\</span>
+</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.workreduce.com/v2/orders"</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: meowmeowmeow"</span> <span class="se">\</span>
   -d <span class="nv">name</span><span class="o">=</span><span class="s2">"This is the name for the order"</span> <span class="se">\</span>
   -d <span class="nv">description</span><span class="o">=</span><span class="s2">"This is some longer description for the order"</span> <span class="se">\</span>
   -d <span class="nv">due_date</span><span class="o">=</span><span class="s2">"2018-05-14T18:30:00Z"</span> <span class="se">\</span>
   -d <span class="nv">task_type</span><span class="o">=</span><span class="s2">"qa_screenshot"</span> <span class="se">\</span>
+  -d <span class="nv">team</span><span class="o">=</span><span class="s2">"EMEA Mobile Team"</span> <span class="se">\</span>
+  -d <span class="nv">requester_email</span><span class="o">=</span><span class="s2">"emea@ads-agency.com"</span> <span class="se">\</span>
   -F <span class="s2">"attachments[]=@screenshot.jpg"</span> -F <span class="s2">"attachments[]=@screenshot2.gif"</span>
 </code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">workreduce</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'workreduce'</span><span class="p">);</span>
 
@@ -428,21 +511,23 @@ Remember — a happy WorkReduce API request is an authenticated request!
   <span class="na">description</span><span class="p">:</span> <span class="s1">'This is some longer description for the order'</span><span class="p">,</span>
   <span class="na">due_date</span><span class="p">:</span> <span class="s1">'2018-05-14T18:30:00Z'</span><span class="p">,</span>
   <span class="na">task_type</span><span class="p">:</span> <span class="s1">'qa_screenshot'</span><span class="p">,</span>
-  <span class="na">attachments</span><span class="p">:</span> <span class="p">[</span><span class="s1">'C:\Users\Public\Desktop\screenshot.jpg'</span><span class="p">]</span>
+  <span class="na">attachments</span><span class="p">:</span> <span class="p">[</span><span class="s1">'C:\Users\Public\Desktop\screenshot.jpg'</span><span class="p">],</span>
+  <span class="na">team</span><span class="p">:</span> <span class="s1">'EMEA Mobile Team'</span><span class="p">,</span>
+  <span class="na">requester_email</span><span class="p">:</span> <span class="s1">'emea@ads-agency.com'</span>
 <span class="p">});</span>
 </code></pre>
 <blockquote>
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">00007848</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"order_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00007848"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"created"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p>This endpoint creates a new Order.</p>
-<h3 id='http-request-2'>HTTP Request</h3>
-<p><code>POST https://api.workreduce.com/v1/orders</code></p>
-<h3 id='url-parameters-2'>URL Parameters</h3>
+<h3 id='http-request-3'>HTTP Request</h3>
+<p><code>POST https://api.workreduce.com/v2/orders</code></p>
+<h3 id='url-parameters'>URL Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -469,12 +554,20 @@ Remember — a happy WorkReduce API request is an authenticated request!
 <td>task_type</td>
 <td>The task type of the order.  Get this from the list of codes of <a href="#list-all-task-types">task types available to your account</a></td>
 </tr>
+<tr>
+<td>team</td>
+<td>Your team or pod within your organization</td>
+</tr>
+<tr>
+<td>requester_email</td>
+<td>The email of the person at your organization who is creating the order</td>
+</tr>
 </tbody></table>
 <h2 id='update-an-existing-order'>Update An Existing Order</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'workreduce'</span>
 
 <span class="n">api</span> <span class="o">=</span> <span class="no">WorkReduce</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
 <span class="n">api</span><span class="p">.</span><span class="nf">orders</span><span class="p">.</span><span class="nf">update</span><span class="p">(</span>
-  <span class="ss">:id</span> <span class="o">=&gt;</span> <span class="s1">'00007848'</span><span class="p">,</span>
+  <span class="ss">:order_number</span> <span class="o">=&gt;</span> <span class="s1">'00007848'</span><span class="p">,</span>
   <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s1">'This is the updated name for the order'</span><span class="p">,</span>
   <span class="ss">:description</span> <span class="o">=&gt;</span> <span class="s1">'This is the updated desc for the order'</span><span class="p">,</span>
   <span class="ss">:due_date</span> <span class="o">=&gt;</span> <span class="s1">'2018-05-14T18:30:00Z'</span><span class="p">,</span>
@@ -487,16 +580,16 @@ Remember — a happy WorkReduce API request is an authenticated request!
 
 <span class="n">api</span> <span class="o">=</span> <span class="n">workreduce</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
 <span class="n">api</span><span class="o">.</span><span class="n">orders</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-  <span class="nb">id</span><span class="o">=</span><span class="s">'00007848'</span><span class="p">,</span>
+  <span class="n">order_number</span><span class="o">=</span><span class="s">'00007848'</span><span class="p">,</span>
   <span class="n">name</span><span class="o">=</span><span class="s">'This is the updated name for the order'</span><span class="p">,</span>
   <span class="n">description</span><span class="o">=</span><span class="s">'This is the updated desc for the order'</span><span class="p">,</span>
   <span class="n">due_date</span><span class="o">=</span><span class="s">'2018-05-14T18:30:00Z'</span><span class="p">,</span>
   <span class="n">attachments</span><span class="o">=</span><span class="p">[</span><span class="s">'C:</span><span class="err">\</span><span class="s">Users</span><span class="err">\</span><span class="s">Public</span><span class="err">\</span><span class="s">Desktop</span><span class="se">\n</span><span class="s">ew_attachment.jpg'</span><span class="p">],</span>
   <span class="n">task_type</span><span class="o">=</span><span class="s">"qa_screenshot"</span>
 <span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.workreduce.com/v1/orders"</span> <span class="se">\</span>
+</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.workreduce.com/v2/orders"</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: meowmeowmeow"</span> <span class="se">\</span>
-  -d <span class="nv">id</span><span class="o">=</span><span class="s2">"00007848"</span> <span class="se">\</span>
+  -d <span class="nv">order_number</span><span class="o">=</span><span class="s2">"00007848"</span> <span class="se">\</span>
   -d <span class="nv">name</span><span class="o">=</span><span class="s2">"This is the updated name for the order"</span> <span class="se">\</span>
   -d <span class="nv">description</span><span class="o">=</span><span class="s2">"This is the updated desc for the order"</span> <span class="se">\</span>
   -d <span class="nv">due_date</span><span class="o">=</span><span class="s2">"2018-05-14T18:30:00Z"</span> <span class="se">\</span>
@@ -506,7 +599,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
 
 <span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">workreduce</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
 <span class="kd">let</span> <span class="nx">order</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">orders</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span>
-  <span class="na">id</span><span class="p">:</span> <span class="s1">'00007848'</span><span class="p">,</span>
+  <span class="na">order_number</span><span class="p">:</span> <span class="s1">'00007848'</span><span class="p">,</span>
   <span class="na">name</span><span class="p">:</span> <span class="s1">'This is the updated name for the order'</span><span class="p">,</span>
   <span class="na">description</span><span class="p">:</span> <span class="s1">'This is the updated desc for the order'</span><span class="p">,</span>
   <span class="na">due_date</span><span class="p">:</span> <span class="s1">'2018-05-14T18:30:00Z'</span><span class="p">,</span>
@@ -518,12 +611,12 @@ Remember — a happy WorkReduce API request is an authenticated request!
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">00007848</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"order_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00007848"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"updated"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre><h3 id='http-request-3'>HTTP Request</h3>
-<p><code>PUT https://api.workreduce.com/v1/orders/&lt;ID&gt;</code></p>
-<h3 id='url-parameters-3'>URL Parameters</h3>
+</span></code></pre><h3 id='http-request-4'>HTTP Request</h3>
+<p><code>PUT https://api.workreduce.com/v2/orders/&lt;OrderNumber&gt;</code></p>
+<h3 id='url-parameters-2'>URL Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -532,9 +625,9 @@ Remember — a happy WorkReduce API request is an authenticated request!
 </tr>
 </thead><tbody>
 <tr>
-<td>id</td>
+<td>order_number</td>
 <td>Required</td>
-<td>The ID of the Order to update</td>
+<td>The ID of the Order to update - all numeric and left-padded with zeros.</td>
 </tr>
 <tr>
 <td>name</td>
@@ -572,7 +665,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
 
 <span class="n">api</span> <span class="o">=</span> <span class="n">workreduce</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
 <span class="n">api</span><span class="o">.</span><span class="n">orders</span><span class="o">.</span><span class="n">cancel</span><span class="p">(</span><span class="s">'00007848'</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.workreduce.com/v1/orders/00007848"</span>
+</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.workreduce.com/v2/orders/00007848"</span>
   -X DELETE
   -H <span class="s2">"Authorization: meowmeowmeow"</span>
 </code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">workreduce</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'workreduce'</span><span class="p">);</span>
@@ -584,14 +677,14 @@ Remember — a happy WorkReduce API request is an authenticated request!
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">00007848</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"order_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00007848"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"deleted"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This endpoint deletes a specific Order.</p>
-<h3 id='http-request-4'>HTTP Request</h3>
-<p><code>DELETE https://api.workreduce.com/v1/orders/&lt;ID&gt;</code></p>
-<h3 id='url-parameters-4'>URL Parameters</h3>
+<p>This endpoint cancels a specific Order.</p>
+<h3 id='http-request-5'>HTTP Request</h3>
+<p><code>DELETE https://api.workreduce.com/v2/orders/&lt;OrderNumber&gt;</code></p>
+<h3 id='url-parameters-3'>URL Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -599,7 +692,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
+<td>OrderNumber</td>
 <td>The ID of the Order to delete</td>
 </tr>
 </tbody></table>
@@ -611,7 +704,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
 
 <span class="n">api</span> <span class="o">=</span> <span class="n">workreduce</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
 <span class="n">api</span><span class="o">.</span><span class="n">tasks</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.workreduce.com/v1/tasks"</span>
+</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://api.workreduce.com/v2/tasks"</span>
   -H <span class="s2">"Authorization: meowmeowmeow"</span>
 </code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">workreduce</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'workreduce'</span><span class="p">);</span>
 
@@ -633,27 +726,12 @@ Remember — a happy WorkReduce API request is an authenticated request!
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
 <p>This endpoint retrieves all task types your account is authorized to request.</p>
-<h3 id='http-request-5'>HTTP Request</h3>
-<p><code>GET https://api.workreduce.com/v1/tasks</code></p>
-<h3 id='url-parameters-5'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>whole_organization</td>
-<td>false</td>
-<td>If set to true, the result will include task types available to anyone in your organization.</td>
-</tr>
-<tr>
-<td>team</td>
-<td>false</td>
-<td>If set to true, the result will include task types available to anyone in your team.</td>
-</tr>
-</tbody></table>
+<h3 id='http-request-6'>HTTP Request</h3>
+<p><code>GET https://api.workreduce.com/v2/tasks</code></p>
+
+<aside class="notice">
+  You cannot use the API to create a new task type.  If you need to setup a new task type for usage with the API, contact your Client Director.
+</aside>
 <h1 id='errors'>Errors</h1>
 <p>The WorkReduce API uses the following error codes:</p>
 
@@ -682,10 +760,6 @@ Remember — a happy WorkReduce API request is an authenticated request!
 <tr>
 <td>410</td>
 <td>Gone -- The something you requested has been removed from our servers.</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&#39;m a teapot.</td>
 </tr>
 <tr>
 <td>429</td>
