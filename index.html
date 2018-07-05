@@ -234,7 +234,7 @@
                     <a href="#get-individual-order" class="toc-h2 toc-link" data-title="get-individual-order">Get Individual Order</a>
                   </li>
                   <li>
-                    <a href="#get-all-open-orders" class="toc-h2 toc-link" data-title="get-all-open-orders">Get All Open Orders</a>
+                    <a href="#get-all-orders" class="toc-h2 toc-link" data-title="get-all-orders">Get All Orders</a>
                   </li>
                   <li>
                     <a href="#new-order" class="toc-h2 toc-link" data-title="new-order">New Order</a>
@@ -352,7 +352,7 @@ You must replace <code>meowmeowmeow</code> with your organization's API key.
   </span><span class="s2">"due_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"requester_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"george@big-agency.com"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MENA launch ads"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"order_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="s2">"work_request"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="s2">"Please look at the tag code..."</span><span class="w">
     </span><span class="p">],</span><span class="w">
@@ -362,7 +362,7 @@ You must replace <code>meowmeowmeow</code> with your organization's API key.
       </span><span class="s2">"https://s3.workreduce.com/bigagency/notes.txt"</span><span class="w">
     </span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"filled_order"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="s2">"work_result"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"Here is a comment...."</span><span class="w">
@@ -382,7 +382,7 @@ You must replace <code>meowmeowmeow</code> with your organization's API key.
 <aside class="success">
 Remember — a happy WorkReduce API request is an authenticated request!
 </aside>
-<h2 id='get-all-open-orders'>Get All Open Orders</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'workreduce'</span>
+<h2 id='get-all-orders'>Get All Orders</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'workreduce'</span>
 
 <span class="n">api</span> <span class="o">=</span> <span class="no">WorkReduce</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
 <span class="n">api</span><span class="p">.</span><span class="nf">orders</span><span class="p">.</span><span class="nf">get</span>
@@ -408,7 +408,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
     </span><span class="s2">"due_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"requester_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"george@big-agency.com"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MENA launch ads"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"order_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"work_request"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"Please look at the tag code..."</span><span class="w">
       </span><span class="p">],</span><span class="w">
@@ -418,7 +418,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
         </span><span class="s2">"https://s3.workreduce.com/bigagency/notes.txt"</span><span class="w">
       </span><span class="p">]</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"filled_order"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"work_result"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
         </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="s2">"Here is a comment...."</span><span class="w">
@@ -437,7 +437,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
     </span><span class="s2">"due_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-04T18:30:00Z"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"requester_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"george@big-agency.com"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MENA launch ads"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"order_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"work_request"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"Please look at the tag code again..."</span><span class="w">
       </span><span class="p">],</span><span class="w">
@@ -447,7 +447,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
         </span><span class="s2">"https://s3.workreduce.com/bigagency/notes2.txt"</span><span class="w">
       </span><span class="p">]</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"filled_order"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"work_result"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
         </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="s2">"Here is another comment...."</span><span class="w">
