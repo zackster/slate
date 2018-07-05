@@ -228,6 +228,9 @@
             <a href="#authentication" class="toc-h1 toc-link" data-title="authentication">Authentication</a>
           </li>
           <li>
+            <a href="#task-lifecycle" class="toc-h1 toc-link" data-title="task-lifecycle">Task Lifecycle</a>
+          </li>
+          <li>
             <a href="#orders" class="toc-h1 toc-link" data-title="orders">Orders</a>
               <ul class="toc-list-h2">
                   <li>
@@ -327,6 +330,16 @@ curl <span class="s2">"api_endpoint_here"</span>
 <aside class="notice">
 You must replace <code>meowmeowmeow</code> with your organization's API key.
 </aside>
+<h1 id='task-lifecycle'>Task Lifecycle</h1>
+<p>Orders for Tasks go through the following lifecycle:</p>
+
+<p><img src="images/workreduce-request-lifecycle-LR.svg" alt="Draft -&gt; Activated -&gt; Accepted -&gt; In Progress -&gt; Submitted -&gt; In QA -&gt; QA Complete -&gt; Completed -&gt; Delivered -&gt; Approved" /></p>
+
+<p><a href="images/workreduce-request-lifecycle.svg">See a full-size image of the diagram</a></p>
+
+<!-- See lifecycle.txt for the Mermaid code to generate the SVG via https://mermaidjs.github.io/mermaid-live-editor/ -->
+
+<p>For a full explanation of each stage, <a href="#order-status-values">see this table</a>.</p>
 <h1 id='orders'>Orders</h1><h2 id='get-individual-order'>Get Individual Order</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'workreduce'</span>
 
 <span class="n">api</span> <span class="o">=</span> <span class="no">WorkReduce</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
@@ -464,10 +477,89 @@ Remember — a happy WorkReduce API request is an authenticated request!
 <p>This endpoint retrieves all open orders for your account.</p>
 <h3 id='http-request-2'>HTTP Request</h3>
 <p><code>GET https://api.workreduce.com/v2/orders</code></p>
-
-<aside class="success">
-Remember — a happy WorkReduce API request is an authenticated request!
-</aside>
+<h3 id='pagination'>Pagination</h3>
+<p>The WorkReduce Get All Orders API route utilizes cursor-based pagination via the <code>starting_after</code> and <code>ending_before</code> parameters. Both parameters take an existing Order Number (see below) and return Orders in reverse chronological order. The <code>ending_before</code> parameter returns Orders listed before the named Order. The <code>starting_after</code> parameter returns Orders listed after the named Order. If both parameters are provided, only ending_before is used.</p>
+<h3 id='url-parameters'>URL Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Additional Info</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>status</td>
+<td>Filter the result for Orders that match the status.  <a href="#order-status-values">See table with acceptable values for <code>status</code></a>.</td>
+<td>Optional.  Default behavior is not to filter.</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>A limit on the number of Orders to be returned, between 1 and 100</td>
+<td>Optional. Default is 10.</td>
+</tr>
+<tr>
+<td>starting_after</td>
+<td>A cursor for use in pagination. starting_after is a WorkReduce Order Number that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include starting_after=obj_foo in order to fetch the next page of the list.</td>
+<td>Optional</td>
+</tr>
+<tr>
+<td>ending_before</td>
+<td>A cursor for use in pagination. ending_before is a WorkReduce Order Number that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_bar, your subsequent call can include ending_before=obj_bar in order to fetch the previous page of the list.</td>
+<td>Optional</td>
+</tr>
+</tbody></table>
+<h3 id='order-status-values'>Order Status values</h3>
+<table><thead>
+<tr>
+<th>Status value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>Draft</code></td>
+<td>Task only submitted: this usually means something is missing such as attachments or sufficient detail</td>
+</tr>
+<tr>
+<td><code>Activated</code></td>
+<td>Task has been submitted by the client and ready to work on</td>
+</tr>
+<tr>
+<td><code>Accepted</code></td>
+<td>Task has been accepted by worker</td>
+</tr>
+<tr>
+<td><code>In Progress</code></td>
+<td>Task is in progress</td>
+</tr>
+<tr>
+<td><code>Submitted</code></td>
+<td>Task has been submitted by worker, ready for review</td>
+</tr>
+<tr>
+<td><code>In QA</code></td>
+<td>Task is in QA</td>
+</tr>
+<tr>
+<td><code>QA Complete</code></td>
+<td>QA has been completed</td>
+</tr>
+<tr>
+<td><code>Delivered</code></td>
+<td>Task is complete, ready to be approved by client</td>
+</tr>
+<tr>
+<td><code>Approved</code></td>
+<td>Task is complete and client has approved the task</td>
+</tr>
+<tr>
+<td><code>Canceled</code></td>
+<td>Task canceled by WorkReduce</td>
+</tr>
+<tr>
+<td><code>Client Canceled</code></td>
+<td>Task canceled by the client</td>
+</tr>
+</tbody></table>
 <h2 id='new-order'>New Order</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'workreduce'</span>
 
 <span class="n">api</span> <span class="o">=</span> <span class="no">WorkReduce</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
@@ -527,7 +619,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
 <p>This endpoint creates a new Order.</p>
 <h3 id='http-request-3'>HTTP Request</h3>
 <p><code>POST https://api.workreduce.com/v2/orders</code></p>
-<h3 id='url-parameters'>URL Parameters</h3>
+<h3 id='url-parameters-2'>URL Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -616,7 +708,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
 </span><span class="p">}</span><span class="w">
 </span></code></pre><h3 id='http-request-4'>HTTP Request</h3>
 <p><code>PUT https://api.workreduce.com/v2/orders/&lt;OrderNumber&gt;</code></p>
-<h3 id='url-parameters-2'>URL Parameters</h3>
+<h3 id='url-parameters-3'>URL Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
@@ -684,7 +776,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
 <p>This endpoint cancels a specific Order.</p>
 <h3 id='http-request-5'>HTTP Request</h3>
 <p><code>DELETE https://api.workreduce.com/v2/orders/&lt;OrderNumber&gt;</code></p>
-<h3 id='url-parameters-3'>URL Parameters</h3>
+<h3 id='url-parameters-4'>URL Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
