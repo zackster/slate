@@ -226,9 +226,25 @@
           </li>
           <li>
             <a href="#authentication" class="toc-h1 toc-link" data-title="authentication">Authentication</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#getting-access-to-the-api" class="toc-h2 toc-link" data-title="getting-access-to-the-api">Getting access to the API</a>
+                  </li>
+                  <li>
+                    <a href="#authorizing-your-requests" class="toc-h2 toc-link" data-title="authorizing-your-requests">Authorizing your requests</a>
+                  </li>
+              </ul>
           </li>
           <li>
-            <a href="#task-lifecycle" class="toc-h1 toc-link" data-title="task-lifecycle">Task Lifecycle</a>
+            <a href="#order-lifecycle" class="toc-h1 toc-link" data-title="order-lifecycle">Order Lifecycle</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#diagram" class="toc-h2 toc-link" data-title="diagram">Diagram</a>
+                  </li>
+                  <li>
+                    <a href="#values-for-order-status-field" class="toc-h2 toc-link" data-title="values-for-order-code-status-code-field">Values for Order <code>status</code> field</a>
+                  </li>
+              </ul>
           </li>
           <li>
             <a href="#orders" class="toc-h1 toc-link" data-title="orders">Orders</a>
@@ -317,26 +333,85 @@ curl <span class="s2">"api_endpoint_here"</span>
 <blockquote>
 <p>Make sure to replace <code>meowmeowmeow</code> with your API key.</p>
 </blockquote>
-
+<h3 id='getting-access-to-the-api'>Getting access to the API</h3>
 <p>WorkReduce uses API keys to allow access to the API. You can request access to the WorkReduce API by having a conversation with your Client Director, who will set you up with an API key.</p>
-
-<p>WorkReduce expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
+<h3 id='authorizing-your-requests'>Authorizing your requests</h3>
+<p>WorkReduce expects for the API key to be included in all API requests to the server in an HTTP header that looks like the following:</p>
 
 <p><code>Authorization: meowmeowmeow</code></p>
 
 <aside class="notice">
 You must replace <code>meowmeowmeow</code> with your organization's API key.
 </aside>
-<h1 id='task-lifecycle'>Task Lifecycle</h1>
-<p>Orders for Tasks go through the following lifecycle:</p>
+<h1 id='order-lifecycle'>Order Lifecycle</h1><h3 id='diagram'>Diagram</h3>
+<p>Orders go through the following lifecycle with regards to their <code>status</code>:</p>
 
-<p><img src="images/workreduce-request-lifecycle-LR.svg" alt="Draft -&gt; Activated -&gt; Accepted -&gt; In Progress -&gt; Submitted -&gt; In QA -&gt; QA Complete -&gt; Completed -&gt; Delivered -&gt; Approved" /></p>
+<style>
+.svg-img {
+  padding-left: 50px;
+}
+.svg-img img {
+  height: 600px;
+  max-height: 600px;
+}
+</style>
 
-<p><a href="images/workreduce-request-lifecycle.svg">See a full-size image of the diagram</a></p>
+<div class="svg-img">
 
-<!-- See lifecycle.txt for the Mermaid code to generate the SVG via https://mermaidjs.github.io/mermaid-live-editor/ -->
-
-<p>For a full explanation of each stage, <a href="#order-status-values">see this table</a>.</p>
+  <img src="images/workreduce-request-lifecycle.svg" alt="Draft -> Activated -> Accepted -> In Progress -> Submitted -> In QA -> QA Complete -> Completed -> Delivered -> Approved">
+</div>
+<h3 id='values-for-order-status-field'>Values for Order <code>status</code> field</h3>
+<table><thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>Draft</code></td>
+<td>Order only submitted: this usually means something is missing such as attachments or sufficient detail</td>
+</tr>
+<tr>
+<td><code>Activated</code></td>
+<td>Order has been submitted by the client and ready to work on</td>
+</tr>
+<tr>
+<td><code>Accepted</code></td>
+<td>Order has been accepted by worker</td>
+</tr>
+<tr>
+<td><code>In Progress</code></td>
+<td>Order is in progress</td>
+</tr>
+<tr>
+<td><code>Submitted</code></td>
+<td>Order has been submitted by worker, ready for review</td>
+</tr>
+<tr>
+<td><code>In QA</code></td>
+<td>Order is in QA</td>
+</tr>
+<tr>
+<td><code>QA Complete</code></td>
+<td>QA has been completed</td>
+</tr>
+<tr>
+<td><code>Delivered</code></td>
+<td>Order is complete, ready to be approved by client</td>
+</tr>
+<tr>
+<td><code>Approved</code></td>
+<td>Order is complete and client has approved the task</td>
+</tr>
+<tr>
+<td><code>Canceled</code></td>
+<td>Order canceled by WorkReduce</td>
+</tr>
+<tr>
+<td><code>Client Canceled</code></td>
+<td>Order canceled by the client</td>
+</tr>
+</tbody></table>
 <h1 id='orders'>Orders</h1><h2 id='get-individual-order'>Get Individual Order</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'workreduce'</span>
 
 <span class="n">api</span> <span class="o">=</span> <span class="no">WorkReduce</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
@@ -356,6 +431,11 @@ You must replace <code>meowmeowmeow</code> with your organization's API key.
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"account_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Media Company"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"account_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WRCUST43442"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"activated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:36:06Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T19:44:33Z"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"order_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00007847"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QA Screenshot of Ad Creative - BigCo"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Complete"</span><span class="p">,</span><span class="w">
@@ -364,25 +444,39 @@ You must replace <code>meowmeowmeow</code> with your organization's API key.
   </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MENA launch ads"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"work_request"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="s2">"Please look at the tag code..."</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Please look at the tag code..."</span><span class="w">
+      </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
     </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="s2">"https://s3.workreduce.com/bigagency/tag_screenshot.jpg"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"https://s3.workreduce.com/bigagency/notes.txt"</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.workreduce.com/bigagency/tag_screenshot.jpg"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx"</span><span class="p">,</span><span class="w">
+      </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"work_result"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"Here is a comment...."</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"https://s3.workreduce.com/bigagency/completed_screenshot.jpg"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"task_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qa_screenshot"</span><span class="w">
+  </span><span class="s2">"work_result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"total_billable_hours"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T19:44:04Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Task completed without any issues"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T19:44:33Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.workreduce.com/bigagency/completed_screenshot.jpg"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"task_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qa_screenshot"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"task_type_category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Screenshots"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p>This endpoint retrieves all details for a specific open order for your account.</p>
@@ -412,62 +506,100 @@ Remember — a happy WorkReduce API request is an authenticated request!
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"account_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Media Company"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"account_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WRCUST43442"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"order_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00007847"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QA Screenshot of Ad Creative - BigCo"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Complete"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"due_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"activated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:36:06Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T19:44:33Z"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"requester_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"george@big-agency.com"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MENA launch ads"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"work_request"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"Please look at the tag code..."</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Please look at the tag code..."</span><span class="w">
+        </span><span class="p">}</span><span class="w">
       </span><span class="p">],</span><span class="w">
       </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"https://s3.workreduce.com/bigagency/tag_screenshot.jpg"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"https://s3.workreduce.com/bigagency/notes.txt"</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.workreduce.com/bigagency/tag_screenshot.jpg"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx"</span><span class="p">,</span><span class="w">
+        </span><span class="p">}</span><span class="w">
       </span><span class="p">]</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"work_result"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"Here is a comment...."</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"https://s3.workreduce.com/bigagency/completed_screenshot.jpg"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"task_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qa_screenshot"</span><span class="w">
+    </span><span class="s2">"work_result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"total_billable_hours"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T19:44:04Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Task completed without any issues"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T19:44:33Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.workreduce.com/bigagency/completed_screenshot.jpg"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"task_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qa_screenshot"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"task_type_category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Screenshots"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"account_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Media Company"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"account_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WRCUST43442"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"order_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00007848"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QA Screenshot of Ad Creative - BigCo - Another"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Approved"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-04T18:30:00Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"activated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-04T18:36:06Z"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-04T19:44:33Z"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"due_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-04T18:30:00Z"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"requester_email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"george@big-agency.com"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"team"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MENA launch ads"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"work_request"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"Please look at the tag code again..."</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-04T18:30:00Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Please look at the tag code (again)..."</span><span class="w">
+        </span><span class="p">}</span><span class="w">
       </span><span class="p">],</span><span class="w">
       </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"https://s3.workreduce.com/bigagency/tag_screenshot2.jpg"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"https://s3.workreduce.com/bigagency/spreadsheet_details2.xlsx"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"https://s3.workreduce.com/bigagency/notes2.txt"</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-04T18:30:00Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.workreduce.com/bigagency/tag_screenshot2.jpg"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-03T18:30:00Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.workreduce.com/bigagency/spreadsheet_details2.xlsx"</span><span class="p">,</span><span class="w">
+        </span><span class="p">}</span><span class="w">
       </span><span class="p">]</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"work_result"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"Here is another comment...."</span><span class="w">
-        </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"https://s3.workreduce.com/bigagency/completed_screenshot2.jpg"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"task_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qa_screenshot"</span><span class="w">
+    </span><span class="s2">"work_result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"total_billable_hours"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"notes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-04T19:44:04Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Task completed without any issues (again)"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"attachments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-04T19:44:33Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://s3.workreduce.com/bigagency/completed_screenshot2.jpg"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"task_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qa_screenshot"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"task_type_category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Screenshots"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre>
@@ -503,58 +635,6 @@ Remember — a happy WorkReduce API request is an authenticated request!
 <td>ending_before</td>
 <td>A cursor for use in pagination. ending_before is a WorkReduce Order Number that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_bar, your subsequent call can include ending_before=obj_bar in order to fetch the previous page of the list.</td>
 <td>Optional</td>
-</tr>
-</tbody></table>
-<h3 id='order-status-values'>Order Status values</h3>
-<table><thead>
-<tr>
-<th>Status value</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code>Draft</code></td>
-<td>Task only submitted: this usually means something is missing such as attachments or sufficient detail</td>
-</tr>
-<tr>
-<td><code>Activated</code></td>
-<td>Task has been submitted by the client and ready to work on</td>
-</tr>
-<tr>
-<td><code>Accepted</code></td>
-<td>Task has been accepted by worker</td>
-</tr>
-<tr>
-<td><code>In Progress</code></td>
-<td>Task is in progress</td>
-</tr>
-<tr>
-<td><code>Submitted</code></td>
-<td>Task has been submitted by worker, ready for review</td>
-</tr>
-<tr>
-<td><code>In QA</code></td>
-<td>Task is in QA</td>
-</tr>
-<tr>
-<td><code>QA Complete</code></td>
-<td>QA has been completed</td>
-</tr>
-<tr>
-<td><code>Delivered</code></td>
-<td>Task is complete, ready to be approved by client</td>
-</tr>
-<tr>
-<td><code>Approved</code></td>
-<td>Task is complete and client has approved the task</td>
-</tr>
-<tr>
-<td><code>Canceled</code></td>
-<td>Task canceled by WorkReduce</td>
-</tr>
-<tr>
-<td><code>Client Canceled</code></td>
-<td>Task canceled by the client</td>
 </tr>
 </tbody></table>
 <h2 id='new-order'>New Order</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'workreduce'</span>
@@ -641,7 +721,7 @@ Remember — a happy WorkReduce API request is an authenticated request!
 </tr>
 <tr>
 <td>task_type</td>
-<td>The task type of the order.  Get this from the list of codes of <a href="#list-all-task-types">task types available to your account</a></td>
+<td>The task type of the order.  Get this from the list of codes of <a href="#list-all-task-types">task types available to your account</a>.  We do not support filtering by task_type_category.</td>
 </tr>
 <tr>
 <td>team</td>
@@ -805,11 +885,13 @@ Remember — a happy WorkReduce API request is an authenticated request!
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qa_screenshot"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"task_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"qa_screenshot"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"task_type_category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Screenshots"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"QA Screenshot of Ad Creative"</span><span class="p">,</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"recon"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"task_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"recon"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"task_type_category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reconciliation"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reconciliation of quarterly ad spend"</span><span class="p">,</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
