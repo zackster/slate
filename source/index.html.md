@@ -66,9 +66,15 @@ let api = workreduce.authorize('meowmeowmeow');
 
 > Make sure to replace `meowmeowmeow` with your API key.
 
+
+
+### Getting access to the API
+
 WorkReduce uses API keys to allow access to the API. You can request access to the WorkReduce API by having a conversation with your Client Director, who will set you up with an API key.
 
-WorkReduce expects for the API key to be included in all API requests to the server in a header that looks like the following:
+### Authorizing your requests
+
+WorkReduce expects for the API key to be included in all API requests to the server in an HTTP header that looks like the following:
 
 `Authorization: meowmeowmeow`
 
@@ -77,19 +83,47 @@ You must replace <code>meowmeowmeow</code> with your organization's API key.
 </aside>
 
 
-# Task Lifecycle
-
-Orders for Tasks go through the following lifecycle:
+# Order Lifecycle
 
 
-![Draft -> Activated -> Accepted -> In Progress -> Submitted -> In QA -> QA Complete -> Completed -> Delivered -> Approved](images/workreduce-request-lifecycle-LR.svg)
+### Diagram
 
-[See a full-size image of the diagram](images/workreduce-request-lifecycle.svg)
+Orders go through the following lifecycle with regards to their `status`:
+
+<style>
+.svg-img {
+  padding-left: 50px;
+}
+.svg-img img {
+  height: 600px;
+  max-height: 600px;
+}
+</style>
+<div class="svg-img">
+
+  <img src="images/workreduce-request-lifecycle.svg" alt="Draft -> Activated -> Accepted -> In Progress -> Submitted -> In QA -> QA Complete -> Completed -> Delivered -> Approved">
+</div>
 
 
-<!-- See lifecycle.txt for the Mermaid code to generate the SVG via https://mermaidjs.github.io/mermaid-live-editor/ -->
+### Values for Order `status` field
 
-For a full explanation of each stage, [see this table](#order-status-values).
+Value | Description
+------------ | ------------
+`Draft` | Order only submitted: this usually means something is missing such as attachments or sufficient detail
+`Activated` | Order has been submitted by the client and ready to work on
+`Accepted` | Order has been accepted by worker
+`In Progress` | Order is in progress
+`Submitted` | Order has been submitted by worker, ready for review
+`In QA` | Order is in QA
+`QA Complete` | QA has been completed
+`Delivered` | Order is complete, ready to be approved by client
+`Approved` | Order is complete and client has approved the task
+`Canceled` | Order canceled by WorkReduce
+`Client Canceled` | Order canceled by the client
+
+
+
+
 
 # Orders
 
@@ -125,6 +159,11 @@ let orders = api.orders.get('00007847');
 
 ```json
 {
+  "account_name": "Media Company",
+  "account_id": "WRCUST43442",
+  "created_at": "2018-05-03T18:30:00Z",
+  "activated_at": "2018-05-03T18:36:06Z",
+  "completed_at": "2018-05-03T19:44:33Z",
   "order_number": "00007847",
   "name": "QA Screenshot of Ad Creative - BigCo",
   "status": "Complete",
@@ -133,25 +172,39 @@ let orders = api.orders.get('00007847');
   "team": "MENA launch ads",
   "work_request": {
     "notes": [
-      "Please look at the tag code..."
+      {
+        "created_at": "2018-05-03T18:30:00Z",
+        "text": "Please look at the tag code..."
+      }
     ],
     "attachments": [
-      "https://s3.workreduce.com/bigagency/tag_screenshot.jpg",
-      "https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx",
-      "https://s3.workreduce.com/bigagency/notes.txt"
+      {
+        "created_at": "2018-05-03T18:30:00Z",
+        "url": "https://s3.workreduce.com/bigagency/tag_screenshot.jpg"
+      },
+      {
+        "created_at": "2018-05-03T18:30:00Z",
+        "url": "https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx",
+      }
     ]
   },
-  "work_result": [
-    {
-      "notes": [
-        "Here is a comment...."
-      ],
-      "attachments": [
-        "https://s3.workreduce.com/bigagency/completed_screenshot.jpg"
-      ]
-    }
-  ],
-  "task_type": "qa_screenshot"
+  "work_result": {
+    "total_billable_hours": 0.5,
+    "notes": [
+      {
+        "created_at": "2018-05-03T19:44:04Z",
+        "text": "Task completed without any issues"
+      }
+    ],
+    "attachments": [
+      {
+        "created_at": "2018-05-03T19:44:33Z",
+        "url": "https://s3.workreduce.com/bigagency/completed_screenshot.jpg"
+      }
+    ]
+  },
+  "task_type": "qa_screenshot",
+  "task_type_category": "Screenshots"
 }
 ```
 
@@ -200,62 +253,100 @@ let orders = api.orders.get();
 ```json
 [
   {
+    "account_name": "Media Company",
+    "account_id": "WRCUST43442",
     "order_number": "00007847",
     "name": "QA Screenshot of Ad Creative - BigCo",
     "status": "Complete",
     "due_date": "2018-05-03T18:30:00Z",
+    "created_at": "2018-05-03T18:30:00Z",
+    "activated_at": "2018-05-03T18:36:06Z",
+    "completed_at": "2018-05-03T19:44:33Z",
     "requester_email": "george@big-agency.com",
     "team": "MENA launch ads",
     "work_request": {
       "notes": [
-        "Please look at the tag code..."
+        {
+          "created_at": "2018-05-03T18:30:00Z",
+          "text": "Please look at the tag code..."
+        }
       ],
       "attachments": [
-        "https://s3.workreduce.com/bigagency/tag_screenshot.jpg",
-        "https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx",
-        "https://s3.workreduce.com/bigagency/notes.txt"
+        {
+          "created_at": "2018-05-03T18:30:00Z",
+          "url": "https://s3.workreduce.com/bigagency/tag_screenshot.jpg"
+        },
+        {
+          "created_at": "2018-05-03T18:30:00Z",
+          "url": "https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx",
+        }
       ]
     },
-    "work_result": [
-      {
-        "notes": [
-          "Here is a comment...."
-        ],
-        "attachments": [
-          "https://s3.workreduce.com/bigagency/completed_screenshot.jpg"
-        ]
-      }
-    ],
-    "task_type": "qa_screenshot"
+    "work_result": {
+      "total_billable_hours": 0.5,
+      "notes": [
+        {
+          "created_at": "2018-05-03T19:44:04Z",
+          "text": "Task completed without any issues"
+        }
+      ],
+      "attachments": [
+        {
+          "created_at": "2018-05-03T19:44:33Z",
+          "url": "https://s3.workreduce.com/bigagency/completed_screenshot.jpg"
+        }
+      ]
+    },
+    "task_type": "qa_screenshot",
+    "task_type_category": "Screenshots"
   },
   {
+    "account_name": "Media Company",
+    "account_id": "WRCUST43442",
     "order_number": "00007848",
     "name": "QA Screenshot of Ad Creative - BigCo - Another",
     "status": "Approved",
+    "created_at": "2018-05-04T18:30:00Z",
+    "activated_at": "2018-05-04T18:36:06Z",
+    "completed_at": "2018-05-04T19:44:33Z",
     "due_date": "2018-05-04T18:30:00Z",
     "requester_email": "george@big-agency.com",
     "team": "MENA launch ads",
     "work_request": {
       "notes": [
-        "Please look at the tag code again..."
+        {
+          "created_at": "2018-05-04T18:30:00Z",
+          "text": "Please look at the tag code (again)..."
+        }
       ],
       "attachments": [
-        "https://s3.workreduce.com/bigagency/tag_screenshot2.jpg",
-        "https://s3.workreduce.com/bigagency/spreadsheet_details2.xlsx",
-        "https://s3.workreduce.com/bigagency/notes2.txt"
+        {
+          "created_at": "2018-05-04T18:30:00Z",
+          "url": "https://s3.workreduce.com/bigagency/tag_screenshot2.jpg"
+        },
+        {
+          "created_at": "2018-05-03T18:30:00Z",
+          "url": "https://s3.workreduce.com/bigagency/spreadsheet_details2.xlsx",
+        }
       ]
     },
-    "work_result": [
-      {
-        "notes": [
-          "Here is another comment...."
-        ],
-        "attachments": [
-          "https://s3.workreduce.com/bigagency/completed_screenshot2.jpg"
-        ]
-      }
-    ],
-    "task_type": "qa_screenshot"
+    "work_result": {
+      "total_billable_hours": 0.5,
+      "notes": [
+        {
+          "created_at": "2018-05-04T19:44:04Z",
+          "text": "Task completed without any issues (again)"
+        }
+      ],
+      "attachments": [
+        {
+          "created_at": "2018-05-04T19:44:33Z",
+          "url": "https://s3.workreduce.com/bigagency/completed_screenshot2.jpg"
+        }
+      ]
+    },
+    "task_type": "qa_screenshot",
+    "task_type_category": "Screenshots"
   }
 ]
 ```
@@ -280,24 +371,6 @@ status | Filter the result for Orders that match the status.  [See table with ac
 limit | A limit on the number of Orders to be returned, between 1 and 100 | Optional. Default is 10.
 starting_after | A cursor for use in pagination. starting_after is a WorkReduce Order Number that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include starting_after=obj_foo in order to fetch the next page of the list. | Optional
 ending_before | A cursor for use in pagination. ending_before is a WorkReduce Order Number that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_bar, your subsequent call can include ending_before=obj_bar in order to fetch the previous page of the list. | Optional
-
-
-### Order Status values
-
-Status value | Description
------------- | ------------
-`Draft` | Task only submitted: this usually means something is missing such as attachments or sufficient detail
-`Activated` | Task has been submitted by the client and ready to work on
-`Accepted` | Task has been accepted by worker
-`In Progress` | Task is in progress
-`Submitted` | Task has been submitted by worker, ready for review
-`In QA` | Task is in QA
-`QA Complete` | QA has been completed
-`Delivered` | Task is complete, ready to be approved by client
-`Approved` | Task is complete and client has approved the task
-`Canceled` | Task canceled by WorkReduce
-`Client Canceled` | Task canceled by the client
-
 
 
 ## New Order
@@ -384,7 +457,7 @@ name | The name for the Order
 due_date | The due date of the Order, formatted according to ISO 8601
 description | A description containing instructions for executing the Order
 attachments | A list of files to attach to the Order
-task_type | The task type of the order.  Get this from the list of codes of [task types available to your account](#list-all-task-types)
+task_type | The task type of the order.  Get this from the list of codes of [task types available to your account](#list-all-task-types).  We do not support filtering by task_type_category.
 team | Your team or pod within your organization
 requester_email | The email of the person at your organization who is creating the order
 
@@ -563,11 +636,13 @@ let tasks = api.tasks.get();
 ```json
 [
   {
-    "code": "qa_screenshot",
+    "task_type": "qa_screenshot",
+    "task_type_category": "Screenshots",
     "description": "QA Screenshot of Ad Creative",
   },
   {
-    "code": "recon",
+    "task_type": "recon",
+    "task_type_category": "Reconciliation",
     "description": "Reconciliation of quarterly ad spend",
   }
 ]

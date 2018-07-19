@@ -1,4 +1,4 @@
-graph TD;
+graph LR;
      A(Draft)-->B(Activated);
      B(Activated)-->C(Accepted);
      C(Accepted)--> D(In Progress);
@@ -8,3 +8,14 @@ graph TD;
      G(QA Complete)-->H(Completed);
      H(Completed)-->I(Delivered);
      I(Delivered)-->J(Approved)
+
+    style A fill:#fda7bf,stroke:#626262,stroke-width:3px
+    style B fill:#fda7bf,stroke:#626262,stroke-width:3px
+    style C fill:#fda7bf,stroke:#626262,stroke-width:3px
+    style D fill:#fda7bf,stroke:#626262,stroke-width:3px
+    style E fill:#fda7bf,stroke:#626262,stroke-width:3px
+    style F fill:#fda7bf,stroke:#626262,stroke-width:3px
+    style G fill:#fda7bf,stroke:#626262,stroke-width:3px
+    style H fill:#fda7bf,stroke:#626262,stroke-width:3px
+    style I fill:#fda7bf,stroke:#626262,stroke-width:3px
+    style J fill:#fda7bf,stroke:#626262,stroke-width:3px
