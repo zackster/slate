@@ -3,9 +3,6 @@ title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - ruby
-  - python
-  - javascript
 
 includes:
   - errors
@@ -40,17 +37,6 @@ v1 | 05-25-2018 | No
 
 > To authorize, use this code:
 
-```ruby
-require 'workreduce'
-
-api = WorkReduce::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import workreduce
-
-api = workreduce.authorize('meowmeowmeow')
-```
 
 ```shell
 # With shell, you can just pass the correct header with each request
@@ -58,11 +44,6 @@ curl "api_endpoint_here"
   -H "Authorization: meowmeowmeow"
 ```
 
-```javascript
-const workreduce = require('workreduce');
-
-let api = workreduce.authorize('meowmeowmeow');
-```
 
 > Make sure to replace `meowmeowmeow` with your API key.
 
@@ -129,31 +110,11 @@ Value | Description
 
 ## Get Individual Order
 
-```ruby
-require 'workreduce'
-
-api = WorkReduce::APIClient.authorize!('meowmeowmeow')
-api.orders.get('00007847')
-```
-
-```python
-import workreduce
-
-api = workreduce.authorize('meowmeowmeow')
-api.orders.get('00007847')
-```
-
 ```shell
-curl "https://api.workreduce.com/v2/order/00007847"
+curl "https://api.workreduce.com/v2/orders/00007847"
   -H "Authorization: meowmeowmeow"
 ```
 
-```javascript
-const workreduce = require('workreduce');
-
-let api = workreduce.authorize('meowmeowmeow');
-let orders = api.orders.get('00007847');
-```
 
 > The above command returns JSON structured like this:
 
@@ -184,7 +145,7 @@ let orders = api.orders.get('00007847');
       },
       {
         "created_at": "2018-05-03T18:30:00Z",
-        "url": "https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx",
+        "url": "https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx"
       }
     ]
   },
@@ -212,7 +173,7 @@ This endpoint retrieves all details for a specific open order for your account.
 
 ### HTTP Request
 
-`GET https://api.workreduce.com/v2/order/<OrderNumber>`
+`GET https://api.workreduce.com/v2/orders/<OrderNumber>`
 
 
 <aside class="success">
@@ -222,30 +183,10 @@ Remember — a happy WorkReduce API request is an authenticated request!
 
 ## Get All Orders
 
-```ruby
-require 'workreduce'
-
-api = WorkReduce::APIClient.authorize!('meowmeowmeow')
-api.orders.get
-```
-
-```python
-import workreduce
-
-api = workreduce.authorize('meowmeowmeow')
-api.orders.get()
-```
 
 ```shell
 curl "https://api.workreduce.com/v2/orders"
   -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const workreduce = require('workreduce');
-
-let api = workreduce.authorize('meowmeowmeow');
-let orders = api.orders.get();
 ```
 
 > The above command returns JSON structured like this:
@@ -278,7 +219,7 @@ let orders = api.orders.get();
         },
         {
           "created_at": "2018-05-03T18:30:00Z",
-          "url": "https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx",
+          "url": "https://s3.workreduce.com/bigagency/spreadsheet_details.xlsx"
         }
       ]
     },
@@ -326,7 +267,7 @@ let orders = api.orders.get();
         },
         {
           "created_at": "2018-05-03T18:30:00Z",
-          "url": "https://s3.workreduce.com/bigagency/spreadsheet_details2.xlsx",
+          "url": "https://s3.workreduce.com/bigagency/spreadsheet_details2.xlsx"
         }
       ]
     },
@@ -375,38 +316,6 @@ ending_before | A cursor for use in pagination. ending_before is a WorkReduce Or
 
 ## New Order
 
-```ruby
-require 'workreduce'
-
-api = WorkReduce::APIClient.authorize!('meowmeowmeow')
-api.orders.create(
-  :name => 'This is the name for the order',
-  :description => 'This is some longer description for the order',
-  :due_date => '2018-05-14T18:30:00Z',
-  :attachments => [
-    'C:\Users\Public\Desktop\screenshot.jpg'
-  ],
-  :task_type => "qa_screenshot",
-  :team => "EMEA Mobile Team",
-  :requester_email => "emea@ads-agency.com"
-)
-```
-
-```python
-import workreduce
-
-api = workreduce.authorize('meowmeowmeow')
-api.orders.create(
-  name='This is the name for the order',
-  description='This is some longer description for the order',
-  due_date='2018-05-14T18:30:00Z',
-  attachments=['C:\Users\Public\Desktop\screenshot.jpg'],
-  task_type='qa_screenshot',
-  team='EMEA Mobile Team',
-  requester_email='emea@ads-agency.com'
-)
-```
-
 ```shell
 curl "https://api.workreduce.com/v2/orders" \
   -H "Authorization: meowmeowmeow" \
@@ -419,20 +328,6 @@ curl "https://api.workreduce.com/v2/orders" \
   -F "attachments[]=@screenshot.jpg" -F "attachments[]=@screenshot2.gif"
 ```
 
-```javascript
-const workreduce = require('workreduce');
-
-let api = workreduce.authorize('meowmeowmeow');
-let order = api.orders.create({
-  name: 'This is the name for the order',
-  description: 'This is some longer description for the order',
-  due_date: '2018-05-14T18:30:00Z',
-  task_type: 'qa_screenshot',
-  attachments: ['C:\Users\Public\Desktop\screenshot.jpg'],
-  team: 'EMEA Mobile Team',
-  requester_email: 'emea@ads-agency.com'
-});
-```
 
 > The above command returns JSON structured like this:
 
@@ -464,35 +359,6 @@ requester_email | The email of the person at your organization who is creating t
 
 ## Update An Existing Order
 
-```ruby
-require 'workreduce'
-
-api = WorkReduce::APIClient.authorize!('meowmeowmeow')
-api.orders.update(
-  :order_number => '00007848',
-  :name => 'This is the updated name for the order',
-  :description => 'This is the updated desc for the order',
-  :due_date => '2018-05-14T18:30:00Z',
-  :attachments => [
-    'C:\Users\Public\Desktop\new_attachment.jpg'
-  ],
-  :task_type => "qa_screenshot"
-)
-```
-
-```python
-import workreduce
-
-api = workreduce.authorize('meowmeowmeow')
-api.orders.update(
-  order_number='00007848',
-  name='This is the updated name for the order',
-  description='This is the updated desc for the order',
-  due_date='2018-05-14T18:30:00Z',
-  attachments=['C:\Users\Public\Desktop\new_attachment.jpg'],
-  task_type="qa_screenshot"
-)
-```
 
 ```shell
 curl "https://api.workreduce.com/v2/orders" \
@@ -503,20 +369,6 @@ curl "https://api.workreduce.com/v2/orders" \
   -d due_date="2018-05-14T18:30:00Z" \
   -d task_type="qa_screenshot" \
   -F "attachments[]=@new_screenshot.jpg" -F "attachments[]=@new_screenshot2.gif"
-```
-
-```javascript
-const workreduce = require('workreduce');
-
-let api = workreduce.authorize('meowmeowmeow');
-let order = api.orders.update({
-  order_number: '00007848',
-  name: 'This is the updated name for the order',
-  description: 'This is the updated desc for the order',
-  due_date: '2018-05-14T18:30:00Z',
-  task_type: 'qa_screenshot',
-  attachments: ['C:\Users\Public\Desktop\new_screenshot.jpg']
-});
 ```
 
 > The above command returns JSON structured like this:
@@ -549,31 +401,10 @@ You must pass in at least one optional parameter or the API will return a [400 E
 
 ## Cancel An Existing Order
 
-```ruby
-require 'workreduce'
-
-api = WorkReduce::APIClient.authorize!('meowmeowmeow')
-api.orders.cancel('00007848')
-```
-
-```python
-import workreduce
-
-api = workreduce.authorize('meowmeowmeow')
-api.orders.cancel('00007848')
-```
-
 ```shell
 curl "https://api.workreduce.com/v2/orders/00007848"
   -X DELETE
   -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const workreduce = require('workreduce');
-
-let api = workreduce.authorize('meowmeowmeow');
-let order = api.orders.cancel('00007848');
 ```
 
 > The above command returns JSON structured like this:
@@ -605,32 +436,10 @@ OrderNumber | The ID of the Order to delete
 
 ## List All Task Types
 
-```ruby
-require 'workreduce'
-
-api = WorkReduce::APIClient.authorize!('meowmeowmeow')
-api.tasks.get
-```
-
-```python
-import workreduce
-
-api = workreduce.authorize('meowmeowmeow')
-api.tasks.get()
-```
-
 ```shell
 curl "https://api.workreduce.com/v2/tasks"
   -H "Authorization: meowmeowmeow"
 ```
-
-```javascript
-const workreduce = require('workreduce');
-
-let api = workreduce.authorize('meowmeowmeow');
-let tasks = api.tasks.get();
-```
-
 > The above command returns JSON structured like this:
 
 ```json
