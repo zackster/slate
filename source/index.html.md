@@ -26,7 +26,7 @@ For example, requests to "https://api.workreduce.com/v2/orders" would go to vers
 
 API Version | Release date | Current Version?
 --------- | ------- | -------
-v2 | 07-05-2018 | **Yes**
+v2 | 08-24-2018 | **Yes**
 v1 | 05-25-2018 | No
 
 
